@@ -7,7 +7,7 @@ import Websites from './pages/Websites';
 import EventWebsite from './pages/EventWebsite';
 
 function App() {
-  return (
+  return ( 
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
