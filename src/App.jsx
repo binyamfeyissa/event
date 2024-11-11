@@ -7,12 +7,11 @@ import Websites from './pages/Websites';
 import EventWebsite from './pages/EventWebsite';
 
 function App() {
-  return ( 
+  return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
-          <Route path="tickets" element={<TicketManager />} />
           <Route path="tickets/:eventId" element={<TicketManager />} />
           <Route path="websites" element={<Websites />} />
           <Route path="website/:eventId" element={<EventWebsite />} />

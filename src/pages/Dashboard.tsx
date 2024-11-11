@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Plus, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useEvents } from '../hooks/useEvents';
 import { EventForm } from '../components/EventForm';
 import WebsiteTemplates from '../components/WebsiteTemplates';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { events, loading, addEvent, updateEvent } = useEvents();
   const [showEventForm, setShowEventForm] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
@@ -106,7 +108,10 @@ const Dashboard = () => {
                       Create Website
                     </button>
                   )}
-                  <button className="w-full border border-orange-500 text-orange-500 py-2 rounded-xl hover:bg-orange-50 transition-colors">
+                  <button 
+                    onClick={() => navigate(`/event/${event.id}`)}
+                    className="w-full border border-orange-500 text-orange-500 py-2 rounded-xl hover:bg-orange-50 transition-colors"
+                  >
                     Manage Event
                   </button>
                 </div>
