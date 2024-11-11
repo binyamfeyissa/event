@@ -3,46 +3,41 @@ name: 🚀 Deploy React App
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger the deploy on
+      - main  # Adjust this branch as needed
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Check out the repository
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js environment
-      - name: Use Node.js 20
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-      
-      # Step 3: Install dependencies and build the project
-      - name: 🔨 Install dependencies and build
-        run: |
-          npm install
-          npm run build
-          
-      # Optional: Verify the output build files
-      - name: 📂 List output files
-        run: find dist/ -type f
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20' 
 
-      # Step 4: Install lftp
-      - name: 📥 Install lftp
-        run: sudo apt-get install -y lftp
+    - name: Install dependencies
+      run: |
+        npm install
 
-      # Step 5: Deploy to cPanel via FTP
-      - name: 🚀 Deploy to cPanel
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          lftp -c "
-          set ssl:verify-certificate no;
-          open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER;
-          mirror -R -P 4 ./dist /public_html;
-          bye;
-          "
+    - name: Build the project
+      run: |
+        npm run build
+
+    - name: Install lftp
+      run: sudo apt-get update && sudo apt-get install -y lftp
+
+    - name: Deploy to cPanel
+      env:
+        FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      run: |
+        lftp -c "
+        set ssl:verify-certificate no;
+        open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER;
+        mirror -R -P 4 ./dist/;
+        bye;
+        "
